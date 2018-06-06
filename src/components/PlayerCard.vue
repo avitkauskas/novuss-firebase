@@ -37,11 +37,11 @@ export default {
     },
 
     created: function () {
-        eventbus.$on('match-cancelled', this.matchCancelled);
+        eventbus.$on('clear-selections', this.clearSelections);
     },
 
     beforeDestroy: function () {
-        eventbus.$off('match-cancelled', this.matchCancelled);
+        eventbus.$off('clear-selections', this.clearSelections);
     },
 
     methods: {
@@ -55,7 +55,7 @@ export default {
             }
         },
 
-        matchCancelled: function () {
+        clearSelections: function () {
           this.selected = false;
         }
     }

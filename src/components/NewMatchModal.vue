@@ -39,6 +39,7 @@
 <script>
 import db from "../firebase"
 import eventbus from '../eventbus'
+import row from '../utils/row'
 
 export default {
     name: 'NewMatchModal',
@@ -65,7 +66,14 @@ export default {
                     } else {
                         [this.player2, this.player1] = this.players;
                     }
-                  $('#newMatchModal').modal('show');
+                    const row_diff = row(this.player1.place) - row(this.player2.place);
+                    if ( this.player2.place !== 1 && row_diff > 1 || row_diff > 2) {
+                        this.players = [];
+                        eventbus.$emit('clear-selections');
+                    } else {
+                        $('#newMatchModal').modal('show');
+                    }
+
                 }
             } else {
                 this.players = [];
@@ -123,7 +131,7 @@ export default {
     mounted () {
     $('#newMatchModal').on('hidden.bs.modal', () => {
         this.players = [];
-        eventbus.$emit('match-cancelled');
+        eventbus.$emit('clear-selections');
     })
   }
 }
