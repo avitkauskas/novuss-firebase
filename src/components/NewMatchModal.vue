@@ -83,6 +83,8 @@ export default {
         addMatch (outcome) {
             db.ref('matches').push({
                 timestamp: -1 * Date.now(),
+                player1_id: this.player1['.key'],
+                player2_id: this.player2['.key'],
                 player1: this.player1.name,
                 player2: this.player2.name,
                 place1: this.player1.place,
@@ -90,30 +92,55 @@ export default {
                 outcome: outcome
             });
 
+            let updates = {};
+
+            let player1_total_matches = this.player1.total_matches + 1;
+            let player2_total_matches = this.player2.total_matches + 1;
+            let player1_challenged = this.player1.challenged + 1;
+            let player2_defended = this.player2.defended + 1;
+
+            updates['/players/' + this.player1['.key'] + '/total_matches'] = player1_total_matches;
+            updates['/players/' + this.player2['.key'] + '/total_matches'] = player2_total_matches;
+            updates['/players/' + this.player1['.key'] + '/challenged'] = player1_challenged;
+            updates['/players/' + this.player2['.key'] + '/defended'] = player2_defended;
+
+            let player1_challenged_successfully = this.player1.challenged_successfully;
+            let player2_defended_successfully = this.player2.defended_successfully;
+
+            if (outcome === 1) {
+                player1_challenged_successfully += 1;
+            } else {
+                player2_defended_successfully += 1;
+            }
+
+            updates['/players/' + this.player1['.key'] + '/challenged_successfully'] = player1_challenged_successfully;
+            updates['/players/' + this.player2['.key'] + '/defended_successfully'] = player2_defended_successfully;
+
+            updates['/players/' + this.player1['.key'] + '/challenge_success_rate'] =
+                player1_challenged_successfully / player1_challenged * 100;
+            updates['/players/' + this.player2['.key'] + '/defend_success_rate'] =
+                player2_defended_successfully / player2_defended * 100;
+            updates['/players/' + this.player1['.key'] + '/total_success_rate'] =
+                (player1_challenged_successfully + this.player1.defended_successfully) /
+                    player1_total_matches * 100;
+            updates['/players/' + this.player2['.key'] + '/total_success_rate'] =
+                (this.player2.challenged_successfully + player2_defended_successfully) /
+                    player2_total_matches * 100;
+
             if (outcome === 1) {
                 const rangePlayers = this.allPlayers.filter(
                     player => player.place >= this.player2.place &&
-                        player.place <= this.player1.place
+                              player.place <= this.player1.place
                 );
 
-                let updates = {};
-
-                updates['/players/' + this.player1['.key']] =
-                    {
-                        name: this.player1.name,
-                        place: this.player2.place
-                    };
+                updates['/players/' + this.player1['.key'] + '/place'] = this.player2.place;
 
                 for (let i = 0, last = rangePlayers.length - 1; i < last; i++) {
-                    updates['/players/' + rangePlayers[i]['.key']] =
-                        {
-                            name: rangePlayers[i].name,
-                            place: rangePlayers[i].place + 1
-                        }
+                    updates['/players/' + rangePlayers[i]['.key'] + '/place'] = rangePlayers[i].place + 1;
                 }
-
-                db.ref().update(updates);
             }
+
+            db.ref().update(updates);
 
             $('#newMatchModal').modal('hide');
         },

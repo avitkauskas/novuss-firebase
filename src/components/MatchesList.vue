@@ -1,18 +1,18 @@
 <template>
 <div class="container">
 
-    <div class="row  justify-content-center">
+    <div class="row justify-content-center">
         <div class="col col-auto">
             <h5 id="list-title">Last 10 Matches</h5>
             <table class="table table-borderless table-sm">
                 <tbody>
                 <tr v-for="(match, index) in matches">
                     <td><small>{{datetime(match)}}</small></td>
-                    <td class="float-right">{{match.player1}} <small>( {{match.place1}} )</small></td>
+                    <td class="text-right">{{match.player1}} <small>( {{match.place1}} )</small></td>
                     <td ><i class="fa" :class="[match.outcome ? 'fa-thumbs-o-up' : 'fa-thumbs-o-down']"></i></td>
-                    <td class="float-left">{{match.player2}} <small>( {{match.place2}} )</small></td>
+                    <td class="text-left">{{match.player2}} <small>( {{match.place2}} )</small></td>
                     <td v-if="index === 0"
-                        class="float-left pointer"
+                        class="text-left pointer"
                         @click="deleteWarning">&nbsp;&nbsp;<i class="fa fa-trash-o"></i></td>
                 </tr>
                 </tbody>
@@ -90,30 +90,70 @@ export default {
         },
 
         deleteMatch () {
+
+            const player1 = this.players.filter(player => player['.key'] === this.matches[0].player1_id)[0];
+            const player2 = this.players.filter(player => player['.key'] === this.matches[0].player2_id)[0];
+
+            let updates = {};
+
+            let player1_total_matches = player1.total_matches - 1;
+            let player2_total_matches = player2.total_matches - 1;
+            let player1_challenged = player1.challenged - 1;
+            let player2_defended = player2.defended - 1;
+
+            updates['/players/' + player1['.key'] + '/total_matches'] = player1_total_matches;
+            updates['/players/' + player2['.key'] + '/total_matches'] = player2_total_matches;
+            updates['/players/' + player1['.key'] + '/challenged'] = player1_challenged;
+            updates['/players/' + player2['.key'] + '/defended'] = player2_defended;
+
+            let player1_challenged_successfully = player1.challenged_successfully;
+            let player2_defended_successfully = player2.defended_successfully;
+
+            if (this.matches[0].outcome === 1) {
+                player1_challenged_successfully -= 1;
+            } else {
+                player2_defended_successfully -= 1;
+            }
+
+            updates['/players/' + player1['.key'] + '/challenged_successfully'] = player1_challenged_successfully;
+            updates['/players/' + player2['.key'] + '/defended_successfully'] = player2_defended_successfully;
+
+            updates['/players/' + player1['.key'] + '/challenge_success_rate'] =
+                player1_challenged
+                    ? player1_challenged_successfully / player1_challenged * 100
+                    : 0;
+
+            updates['/players/' + player2['.key'] + '/defend_success_rate'] =
+                player2_defended
+                    ? player2_defended_successfully / player2_defended * 100
+                    : 0;
+
+            updates['/players/' + player1['.key'] + '/total_success_rate'] =
+                player1_total_matches
+                    ? (player1_challenged_successfully + player1.defended_successfully) /
+                        player1_total_matches * 100
+                    : 0;
+
+            updates['/players/' + player2['.key'] + '/total_success_rate'] =
+                player2_total_matches
+                    ? (player2.challenged_successfully + player2_defended_successfully) /
+                        player2_total_matches * 100
+                    : 0;
+
             if (this.matches[0].outcome === 1) {
                 const rangePlayers = this.players.filter(
                     player => player.place >= this.matches[0].place2 &&
                         player.place <= this.matches[0].place1
                 );
 
-                let updates = {};
-
-                updates['/players/' + rangePlayers[0]['.key']] =
-                    {
-                        name: rangePlayers[0].name,
-                        place: rangePlayers[rangePlayers.length - 1].place
-                    };
+                updates['/players/' + rangePlayers[0]['.key'] + '/place'] = rangePlayers[rangePlayers.length - 1].place;
 
                 for (let i = 1, last = rangePlayers.length; i < last; i++) {
-                    updates['/players/' + rangePlayers[i]['.key']] =
-                        {
-                            name: rangePlayers[i].name,
-                            place: rangePlayers[i].place - 1
-                        }
+                    updates['/players/' + rangePlayers[i]['.key'] + '/place'] = rangePlayers[i].place - 1;
                 }
-
-                db.ref().update(updates);
             }
+
+            db.ref().update(updates);
 
             db.ref('/matches/' + this.matches[0]['.key']).remove();
 
@@ -125,7 +165,7 @@ export default {
 
 <style scoped>
 #list-title {
-    margin-top: 25px;
+    margin-top: 20px;
     font-weight: 100;
 }
 
@@ -133,7 +173,6 @@ td {
     color: #555555;
     font-size: 0.95rem;
 }
-
 i {
     color: #999999;
     font-size: 0.8rem;

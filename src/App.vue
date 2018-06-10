@@ -4,7 +4,8 @@
     <new-user-modal :total-players="players.length"/>
     <new-match-modal/>
     <pyramid :players="players"/>
-    <matches-list :matches="matches" :players="players"/>
+    <matches-list v-if="matches.length > 0" :matches="matches" :players="players"/>
+    <players-stats v-if="matches.length > 0" :players="players"/>
 </div>
 </template>
 
@@ -15,6 +16,7 @@ import Pyramid from './components/Pyramid'
 import NewUserModal from './components/NewUserModal'
 import NewMatchModal from './components/NewMatchModal'
 import MatchesList from "./components/MatchesList"
+import PlayersStats from "./components/PlayersStats.vue"
 
 export default {
     name: 'App',
@@ -29,6 +31,7 @@ export default {
         NewUserModal,
         NewMatchModal,
         MatchesList,
+        PlayersStats
     }
 }
 </script>

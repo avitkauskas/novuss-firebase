@@ -55,7 +55,15 @@ export default {
             if (this.name.trim() !== '') {
                 db.ref('players').push({
                     name: this.name,
-                    place: this.totalPlayers + 1
+                    place: this.totalPlayers + 1,
+                    total_matches: 0,
+                    challenged: 0,
+                    challenged_successfully: 0,
+                    defended: 0,
+                    defended_successfully: 0,
+                    challenge_success_rate: 0.0,
+                    defend_success_rate: 0.0,
+                    total_success_rate: 0.0
                 });
                 this.name = '';
                 $('#newPlayerModal').modal('hide');

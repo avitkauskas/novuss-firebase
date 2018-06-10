@@ -6,6 +6,10 @@
 
 Built with Vue and Firebase
 
+## Firebase Config
+Copy config from your Firebase account to the file <code>firebase-example.js</code> 
+and rename this file to <code>firebase.js</code>
+
 ## Build Setup
 
 ``` bash
