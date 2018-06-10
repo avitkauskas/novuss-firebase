@@ -13,5 +13,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 
-#firebase config file
+#firebase config files
 firebase.js
+firebase-prod.js
+firebase-dev.js
