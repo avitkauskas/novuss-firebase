@@ -57,6 +57,7 @@ export default {
                     name: this.name,
                     place: this.totalPlayers + 1,
                     total_matches: 0,
+                    total_successfully: 0,
                     challenged: 0,
                     challenged_successfully: 0,
                     defended: 0,

@@ -106,26 +106,30 @@ export default {
 
             let player1_challenged_successfully = this.player1.challenged_successfully;
             let player2_defended_successfully = this.player2.defended_successfully;
+            let player1_total_successfully = this.player1.total_successfully;
+            let player2_total_successfully = this.player2.total_successfully;
 
             if (outcome === 1) {
                 player1_challenged_successfully += 1;
+                player1_total_successfully += 1;
             } else {
                 player2_defended_successfully += 1;
+                player2_total_successfully += 1;
             }
 
             updates['/players/' + this.player1['.key'] + '/challenged_successfully'] = player1_challenged_successfully;
             updates['/players/' + this.player2['.key'] + '/defended_successfully'] = player2_defended_successfully;
+            updates['/players/' + this.player1['.key'] + '/total_successfully'] = player1_total_successfully;
+            updates['/players/' + this.player2['.key'] + '/total_successfully'] = player2_total_successfully;
 
             updates['/players/' + this.player1['.key'] + '/challenge_success_rate'] =
                 player1_challenged_successfully / player1_challenged * 100;
             updates['/players/' + this.player2['.key'] + '/defend_success_rate'] =
                 player2_defended_successfully / player2_defended * 100;
             updates['/players/' + this.player1['.key'] + '/total_success_rate'] =
-                (player1_challenged_successfully + this.player1.defended_successfully) /
-                    player1_total_matches * 100;
+                player1_total_successfully / player1_total_matches * 100;
             updates['/players/' + this.player2['.key'] + '/total_success_rate'] =
-                (this.player2.challenged_successfully + player2_defended_successfully) /
-                    player2_total_matches * 100;
+                player2_total_successfully / player2_total_matches * 100;
 
             if (outcome === 1) {
                 const rangePlayers = this.allPlayers.filter(

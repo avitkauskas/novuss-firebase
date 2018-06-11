@@ -1,16 +1,14 @@
 <template>
 <div class="col-auto mb-1 pl-1 pr-0" @click="playerClicked">
-    <div class="input-group pointer">
+    <div class="input-group pointer" :class="{selected: selected}">
         <div class="input-group-prepend">
             <span class="input-group-text bg-light"
-                  :class="{selected: selected}"
                   id="inputGroupPrepend">
                 {{player.place}}
             </span>
         </div>
         <input type="text"
                class="form-control bg-white pl-0 pr-0 text-center pointer"
-               :class="{selected: selected}"
                aria-describedby="inputGroupPrepend"
                disabled
                :placeholder="player.name"
@@ -68,11 +66,22 @@ input::placeholder {
     font-size: 0.95rem;
 }
 
+.input-group:hover {
+    border-color: #cccccc;
+}
+
+.input-group {
+    border-color: white;
+    border-width: thin;
+    border-style: solid;
+    border-radius: 5px;
+}
+
 .selected {
     border-color: red;
 }
 
-/*.pointer {*/
-    /*cursor: pointer;*/
-/*}*/
+.selected:hover {
+    border-color: red;
+}
 </style>

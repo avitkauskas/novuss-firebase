@@ -3,8 +3,11 @@
 
     <div class="row justify-content-center">
         <div class="col col-auto">
-            <h5 id="list-title">Last 10 Matches</h5>
-            <table class="table table-borderless table-sm">
+            <h5 id="list-title" class="pointer" @click="toggleMatches">
+                Last 10 Matches
+                <i class="pointer fa" :class="[visibleMatches ? 'fa-angle-up' : 'fa-angle-down']"></i>
+            </h5>
+            <table v-if="visibleMatches" class="table table-borderless table-sm">
                 <tbody>
                 <tr v-for="(match, index) in matches">
                     <td><small>{{datetime(match)}}</small></td>
@@ -13,7 +16,8 @@
                     <td class="text-left">{{match.player2}} <small>( {{match.place2}} )</small></td>
                     <td v-if="index === 0"
                         class="text-left pointer"
-                        @click="deleteWarning">&nbsp;&nbsp;<i class="fa fa-trash-o"></i></td>
+                        @click="deleteWarning">&nbsp;&nbsp;<i class="fa fa-trash-o"></i>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -60,7 +64,17 @@ export default {
         'players'
     ],
 
+    data () {
+        return {
+            visibleMatches: true
+        }
+    },
+
     methods: {
+        toggleMatches () {
+            this.visibleMatches = !this.visibleMatches;
+        },
+
         datetime (match) {
             let d = new Date(-1 * match.timestamp),
                 year = d.getFullYear(),
@@ -108,15 +122,21 @@ export default {
 
             let player1_challenged_successfully = player1.challenged_successfully;
             let player2_defended_successfully = player2.defended_successfully;
+            let player1_total_successfully = player1.total_successfully;
+            let player2_total_successfully = player2.total_successfully;
 
             if (this.matches[0].outcome === 1) {
                 player1_challenged_successfully -= 1;
+                player1_total_successfully -= 1;
             } else {
                 player2_defended_successfully -= 1;
+                player2_total_successfully -= 1;
             }
 
             updates['/players/' + player1['.key'] + '/challenged_successfully'] = player1_challenged_successfully;
             updates['/players/' + player2['.key'] + '/defended_successfully'] = player2_defended_successfully;
+            updates['/players/' + player1['.key'] + '/total_successfully'] = player1_total_successfully;
+            updates['/players/' + player2['.key'] + '/total_successfully'] = player2_total_successfully;
 
             updates['/players/' + player1['.key'] + '/challenge_success_rate'] =
                 player1_challenged
@@ -130,14 +150,12 @@ export default {
 
             updates['/players/' + player1['.key'] + '/total_success_rate'] =
                 player1_total_matches
-                    ? (player1_challenged_successfully + player1.defended_successfully) /
-                        player1_total_matches * 100
+                    ? player1_total_successfully / player1_total_matches * 100
                     : 0;
 
             updates['/players/' + player2['.key'] + '/total_success_rate'] =
                 player2_total_matches
-                    ? (player2.challenged_successfully + player2_defended_successfully) /
-                        player2_total_matches * 100
+                    ? player2.total_successfully / player2_total_matches * 100
                     : 0;
 
             if (this.matches[0].outcome === 1) {
@@ -176,5 +194,8 @@ td {
 i {
     color: #999999;
     font-size: 0.8rem;
+}
+h5>i {
+    font-size: 1rem;
 }
 </style>
