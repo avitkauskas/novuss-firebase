@@ -81,6 +81,13 @@ export default {
         },
 
         addMatch (outcome) {
+            const K = 30;
+
+            let player1Expected = 1 / (1 + Math.pow(10, (this.player2.rating - this.player1.rating) / 400));
+
+            let player1Change = Math.round(K * (outcome - player1Expected));
+            let player2Change = -player1Change;
+
             db.ref('matches').push({
                 timestamp: -1 * Date.now(),
                 player1_id: this.player1['.key'],
@@ -89,10 +96,17 @@ export default {
                 player2: this.player2.name,
                 place1: this.player1.place,
                 place2: this.player2.place,
+                rating1: this.player1.rating,
+                rating2: this.player2.rating,
+                change1: player1Change,
+                change2: player2Change,
                 outcome: outcome
             });
 
             let updates = {};
+
+            updates['/players/' + this.player1['.key'] + '/rating'] = this.player1.rating + player1Change;
+            updates['/players/' + this.player2['.key'] + '/rating'] = this.player2.rating + player2Change;
 
             let player1_total_matches = this.player1.total_matches + 1;
             let player2_total_matches = this.player2.total_matches + 1;

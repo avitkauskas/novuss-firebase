@@ -8,6 +8,113 @@
             </h5>
             <table v-if="visibleStats" class="table table-borderless table-sm">
                 <tbody>
+                <tr class="pointer" @click="toggleBestRatedPlayers">
+                    <td class="text-right"><small>Best rated players</small></td>
+                    <td>
+                        <i class="fa" :class="[visibleBestRatedPlayers ? 'fa-angle-up' : 'fa-angle-down']"></i>
+                    </td>
+                    <td>{{bestRatedPlayer.name}}</td>
+                    <td class="text-left">
+                        <small>{{bestRatedPlayer.rating}} rating points
+                            after {{bestRatedPlayer.total_matches}} matches
+                        </small>
+                    </td>
+                </tr>
+                <tr class="pointer" @click="toggleBestRatedPlayers"
+                    v-if="visibleBestRatedPlayers"
+                    v-for="(player, index) in otherRatedPlayers"
+                >
+                    <td></td>
+                    <td class="dimmed"><small>{{index + 2}}</small></td>
+                    <td>{{player.name}}</td>
+                    <td class="text-left">
+                        <small>{{player.rating}} rating points
+                            after {{player.total_matches}} matches
+                        </small>
+                    </td>
+                </tr>
+                <tr class="pointer" @click="toggleMostSuccessfulPlayers">
+                    <td class="text-right"><small>Most successful players</small></td>
+                    <td>
+                        <i class="fa" :class="[visibleMostSuccessfulPlayers ? 'fa-angle-up' : 'fa-angle-down']"></i>
+                    </td>
+                    <td>{{mostSuccessfulPlayer.name}}</td>
+                    <td class="text-left">
+                        <small>{{mostSuccessfulPlayer.total_success_rate | roundUp(0)}}%
+                            ( {{mostSuccessfulPlayer.challenged_successfully
+                            + mostSuccessfulPlayer.defended_successfully}}/{{mostSuccessfulPlayer.total_matches}} )
+                            of total matches won
+                        </small>
+                    </td>
+                </tr>
+                <tr class="pointer" @click="toggleMostSuccessfulPlayers"
+                    v-if="visibleMostSuccessfulPlayers"
+                    v-for="(player, index) in otherSuccessfulPlayers"
+                >
+                    <td></td>
+                    <td class="dimmed"><small>{{index + 2}}</small></td>
+                    <td>{{player.name}}</td>
+                    <td class="text-left">
+                        <small>{{player.total_success_rate | roundUp(0)}}%
+                            ( {{player.total_successfully}}/{{player.total_matches}} )
+                            of total matches won
+                        </small>
+                    </td>
+                </tr>
+                <tr class="pointer" @click="toggleMostSuccessfulChallengers">
+                    <td class="text-right"><small>Most successful challengers</small></td>
+                    <td class="pointer" @click="toggleMostSuccessfulChallengers">
+                        <i class="fa" :class="[visibleMostSuccessfulChallengers ? 'fa-angle-up' : 'fa-angle-down']"></i>
+                    </td>
+                    <td>{{mostSuccessfulChallenger.name}}</td>
+                    <td class="text-left">
+                        <small>{{mostSuccessfulChallenger.challenge_success_rate | roundUp(0)}}%
+                            (
+                            {{mostSuccessfulChallenger.challenged_successfully}}/{{mostSuccessfulChallenger.challenged}}
+                            ) of challenges successful</small>
+                    </td>
+                </tr>
+                <tr class="pointer" @click="toggleMostSuccessfulChallengers"
+                    v-if="visibleMostSuccessfulChallengers"
+                    v-for="(player, index) in otherSuccessfulChallengers"
+                >
+                    <td></td>
+                    <td class="dimmed"><small>{{index + 2}}</small></td>
+                    <td>{{player.name}}</td>
+                    <td class="text-left">
+                        <small>{{player.challenge_success_rate | roundUp(0)}}%
+                            ( {{player.challenged_successfully}}/{{player.challenged}} )
+                            of challenges successful
+                        </small>
+                    </td>
+                </tr>
+                <tr class="pointer" @click="toggleMostSuccessfulDefenders">
+                    <td class="text-right"><small>Most successful defenders</small></td>
+                    <td class="pointer" @click="toggleMostSuccessfulDefenders">
+                        <i class="fa" :class="[visibleMostSuccessfulDefenders ? 'fa-angle-up' : 'fa-angle-down']"></i>
+                    </td>
+                    <td>{{mostSuccessfulDefender.name}}</td>
+                    <td class="text-left">
+                        <small>{{mostSuccessfulDefender.defend_success_rate | roundUp(0)}}%
+                            (
+                            {{mostSuccessfulDefender.defended_successfully}}/{{mostSuccessfulDefender.defended}}
+                            ) of defences successful</small>
+                    </td>
+                </tr>
+                <tr class="pointer" @click="toggleMostSuccessfulDefenders"
+                    v-if="visibleMostSuccessfulDefenders"
+                    v-for="(player, index) in otherSuccessfulDefenders"
+                >
+                    <td></td>
+                    <td class="dimmed"><small>{{index + 2}}</small></td>
+                    <td>{{player.name}}</td>
+                    <td class="text-left">
+                        <small>{{player.defend_success_rate | roundUp(0)}}%
+                            ( {{player.defended_successfully}}/{{player.defended}} )
+                            of defences successful
+                        </small>
+                    </td>
+                </tr>
                 <tr class="pointer" @click="toggleMostActivePlayers">
                     <td class="text-right"><small>Most active players</small></td>
                     <td>
@@ -101,88 +208,6 @@
                         </small>
                     </td>
                 </tr>
-                <tr class="pointer" @click="toggleMostSuccessfulPlayers">
-                    <td class="text-right"><small>Most successful players</small></td>
-                    <td>
-                        <i class="fa" :class="[visibleMostSuccessfulPlayers ? 'fa-angle-up' : 'fa-angle-down']"></i>
-                    </td>
-                    <td>{{mostSuccessfulPlayer.name}}</td>
-                    <td class="text-left">
-                        <small>{{mostSuccessfulPlayer.total_success_rate | roundUp(0)}}%
-                        ( {{mostSuccessfulPlayer.challenged_successfully
-                            + mostSuccessfulPlayer.defended_successfully}}/{{mostSuccessfulPlayer.total_matches}} )
-                        of total matches won
-                        </small>
-                    </td>
-                </tr>
-                <tr class="pointer" @click="toggleMostSuccessfulPlayers"
-                    v-if="visibleMostSuccessfulPlayers"
-                    v-for="(player, index) in otherSuccessfulPlayers"
-                >
-                    <td></td>
-                    <td class="dimmed"><small>{{index + 2}}</small></td>
-                    <td>{{player.name}}</td>
-                    <td class="text-left">
-                        <small>{{player.total_success_rate | roundUp(0)}}%
-                            ( {{player.total_successfully}}/{{player.total_matches}} )
-                            of total matches won
-                        </small>
-                    </td>
-                </tr>
-                <tr class="pointer" @click="toggleMostSuccessfulChallengers">
-                    <td class="text-right"><small>Most successful challengers</small></td>
-                    <td class="pointer" @click="toggleMostSuccessfulChallengers">
-                        <i class="fa" :class="[visibleMostSuccessfulChallengers ? 'fa-angle-up' : 'fa-angle-down']"></i>
-                    </td>
-                    <td>{{mostSuccessfulChallenger.name}}</td>
-                    <td class="text-left">
-                        <small>{{mostSuccessfulChallenger.challenge_success_rate | roundUp(0)}}%
-                            (
-                            {{mostSuccessfulChallenger.challenged_successfully}}/{{mostSuccessfulChallenger.challenged}}
-                            ) of challenges successful</small>
-                    </td>
-                </tr>
-                <tr class="pointer" @click="toggleMostSuccessfulChallengers"
-                    v-if="visibleMostSuccessfulChallengers"
-                    v-for="(player, index) in otherSuccessfulChallengers"
-                >
-                    <td></td>
-                    <td class="dimmed"><small>{{index + 2}}</small></td>
-                    <td>{{player.name}}</td>
-                    <td class="text-left">
-                        <small>{{player.challenge_success_rate | roundUp(0)}}%
-                            ( {{player.challenged_successfully}}/{{player.challenged}} )
-                            of challenges successful
-                        </small>
-                    </td>
-                </tr>
-                <tr class="pointer" @click="toggleMostSuccessfulDefenders">
-                    <td class="text-right"><small>Most successful defenders</small></td>
-                    <td class="pointer" @click="toggleMostSuccessfulDefenders">
-                        <i class="fa" :class="[visibleMostSuccessfulDefenders ? 'fa-angle-up' : 'fa-angle-down']"></i>
-                    </td>
-                    <td>{{mostSuccessfulDefender.name}}</td>
-                    <td class="text-left">
-                        <small>{{mostSuccessfulDefender.defend_success_rate | roundUp(0)}}%
-                            (
-                            {{mostSuccessfulDefender.defended_successfully}}/{{mostSuccessfulDefender.defended}}
-                            ) of defences successful</small>
-                    </td>
-                </tr>
-                <tr class="pointer" @click="toggleMostSuccessfulDefenders"
-                    v-if="visibleMostSuccessfulDefenders"
-                    v-for="(player, index) in otherSuccessfulDefenders"
-                >
-                    <td></td>
-                    <td class="dimmed"><small>{{index + 2}}</small></td>
-                    <td>{{player.name}}</td>
-                    <td class="text-left">
-                        <small>{{player.defend_success_rate | roundUp(0)}}%
-                            ( {{player.defended_successfully}}/{{player.defended}} )
-                            of defences successful
-                        </small>
-                    </td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -200,17 +225,22 @@ export default {
 
     data () {
       return {
-          visibleMostActivePlayers: false,
-          visibleMostActiveChallenges: false,
-          visibleMostActiveDefenders: false,
+          visibleBestRatedPlayers: false,
           visibleMostSuccessfulPlayers: false,
           visibleMostSuccessfulChallengers: false,
           visibleMostSuccessfulDefenders: false,
+          visibleMostActivePlayers: false,
+          visibleMostActiveChallenges: false,
+          visibleMostActiveDefenders: false,
           visibleStats: false
       }
     },
 
     computed: {
+        bestRatedPlayer () {
+            return this.playersSortedBy('rating', 'total_matches')[0];
+        },
+
         mostActivePlayer () {
             return this.playersSortedBy('total_matches', 'total_success_rate')[0];
         },
@@ -233,6 +263,10 @@ export default {
 
         mostSuccessfulDefender () {
             return this.playersSortedBy('defend_success_rate', 'defended')[0];
+        },
+
+        otherRatedPlayers () {
+            return this.playersSortedBy('rating', 'total_matches').slice(1);
         },
 
         otherActivePlayers () {
@@ -271,6 +305,10 @@ export default {
                 }
             });
             return arr;
+        },
+
+        toggleBestRatedPlayers () {
+            this.visibleBestRatedPlayers = !this.visibleBestRatedPlayers;
         },
 
         toggleMostActivePlayers () {

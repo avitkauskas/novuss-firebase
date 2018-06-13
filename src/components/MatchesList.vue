@@ -11,9 +11,11 @@
                 <tbody>
                 <tr v-for="(match, index) in matches">
                     <td><small>{{datetime(match)}}</small></td>
-                    <td class="text-right">{{match.player1}} <small>( {{match.place1}} )</small></td>
+                    <td class="text-right">{{match.player1}} <small>( {{match.place1}} )
+                        {{match.rating1}} {{match.change1 | withPlusSign}}</small></td>
                     <td ><i class="fa" :class="[match.outcome ? 'fa-thumbs-o-up' : 'fa-thumbs-o-down']"></i></td>
-                    <td class="text-left">{{match.player2}} <small>( {{match.place2}} )</small></td>
+                    <td class="text-left">{{match.player2}} <small>( {{match.place2}} )
+                        {{match.rating2}} {{match.change2 | withPlusSign}}</small></td>
                     <td v-if="index === 0"
                         class="text-left pointer"
                         @click="deleteWarning">&nbsp;&nbsp;<i class="fa fa-trash-o"></i>
@@ -110,6 +112,9 @@ export default {
 
             let updates = {};
 
+            updates['/players/' + player1['.key'] + '/rating'] = this.matches[0].rating1;
+            updates['/players/' + player2['.key'] + '/rating'] = this.matches[0].rating2;
+
             let player1_total_matches = player1.total_matches - 1;
             let player2_total_matches = player2.total_matches - 1;
             let player1_challenged = player1.challenged - 1;
@@ -176,6 +181,12 @@ export default {
             db.ref('/matches/' + this.matches[0]['.key']).remove();
 
             $('#deleteMatchModal').modal('hide');
+        }
+    },
+
+    filters: {
+        withPlusSign (value) {
+            return (value >= 0) ? "+" + value.toString() : value;
         }
     }
 }
