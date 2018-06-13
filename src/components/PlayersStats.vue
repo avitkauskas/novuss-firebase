@@ -34,7 +34,7 @@
                         <small>
                             {{player.total_matches}} matches played
                             with {{player.total_success_rate | roundUp(0)}}%
-                            ( {{player.total_successfully}}/{{mostActivePlayer.total_matches}} )
+                            ( {{player.total_successfully}}/{{player.total_matches}} )
                             success
                         </small>
                     </td>
