@@ -1,5 +1,5 @@
 <template>
-<div class="row justify-content-center">
+<div class="row justify-content-center flex-nowrap">
     <player-card v-for="player in players"
                  :player="player"
                  :total-players="totalPlayers"

@@ -18,7 +18,7 @@
                         {{match.rating2}} {{match.change2 | withPlusSign}}</small></td>
                     <td v-if="index === 0"
                         class="text-left pointer"
-                        @click="deleteWarning">&nbsp;&nbsp;<i class="fa fa-trash-o"></i>
+                        @click="deleteWarning"><i class="fa fa-trash-o"></i>
                     </td>
                 </tr>
                 </tbody>

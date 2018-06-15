@@ -1,5 +1,5 @@
 <template>
-<div id="app">
+<div id="app" class="container-fluid">
     <h1>--- Novuss ---</h1>
     <new-user-modal :total-players="players.length"/>
     <new-match-modal/>
