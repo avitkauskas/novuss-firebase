@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div>
 
     <div class="row justify-content-center">
         <div class="col col-auto">
@@ -7,7 +7,7 @@
                 Last 10 Matches
                 <i class="pointer fa" :class="[visibleMatches ? 'fa-angle-up' : 'fa-angle-down']"></i>
             </h5>
-            <table v-if="visibleMatches" class="table table-borderless table-sm">
+            <table v-if="visibleMatches" class="table table-borderless table-sm table-responsive">
                 <tbody>
                 <tr v-for="(match, index) in matches">
                     <td><small>{{datetime(match)}}</small></td>
@@ -160,7 +160,7 @@ export default {
 
             updates['/players/' + player2['.key'] + '/total_success_rate'] =
                 player2_total_matches
-                    ? player2.total_successfully / player2_total_matches * 100
+                    ? player2_total_successfully / player2_total_matches * 100
                     : 0;
 
             if (this.matches[0].outcome === 1) {

@@ -1,77 +1,75 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col col-auto">
-                <h5 id="list-title" class="pointer" @click="toggleStats">
-                    Player Statistics
-                    <i class="pointer fa" :class="[visibleStats ? 'fa-angle-up' : 'fa-angle-down']"></i>
-                </h5>
-                <table v-if="visibleStats" class="table table-borderless table-sm table-responsive">
-                    <thead>
-                    <tr>
-                        <th scope="col">
-                            #
-                        </th>
-                        <th scope="col">
-                            Player
-                        </th>
-                        <th scope="col" class="pointer" @click="sortByRating"
-                            :class="{selected : sortIndex === 0}">
-                            Rating
-                        </th>
-                        <th scope="col" class="pointer" @click="sortByMatchesSuccess"
-                            :class="{selected : sortIndex === 1}">
-                            Matches
-                        </th>
-                        <th scope="col" class="pointer" @click="sortByChallengeSuccess"
-                            :class="{selected : sortIndex === 2}">
-                            Challenges
-                        </th>
-                        <th scope="col" class="pointer" @click="sortByDefenceSuccess"
-                            :class="{selected : sortIndex === 3}">
-                            Defences
-                        </th>
-                        <th scope="col" class="pointer" @click="sortByMatches"
-                            :class="{selected : sortIndex === 4}">
-                            M
-                        </th>
-                        <th scope="col" class="pointer" @click="sortByChallenges"
-                            :class="{selected : sortIndex === 5}">
-                            C
-                        </th>
-                        <th scope="col" class="pointer" @click="sortByDefences"
-                            :class="{selected : sortIndex === 6}">
-                            D
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(player, index) in sortedPlayers">
-                        <td><small>{{index + 1}}</small></td>
-                        <td>{{player.name}}</td>
-                        <td :class="{selected : sortIndex === 0}"><small>{{rating(player)}}</small></td>
-                        <td :class="{selected : sortIndex === 1}">
-                            <small>{{matchesSuccess(player)}}</small>
-                        </td>
-                        <td :class="{selected : sortIndex === 2}">
-                            <small>{{challengesSuccess(player)}}</small>
-                        </td>
-                        <td :class="{selected : sortIndex === 3}">
-                            <small>{{defencesSuccess(player)}}</small>
-                        </td>
-                        <td :class="{selected : sortIndex === 4}">
-                            <small>{{player.total_matches}}</small>
-                        </td>
-                        <td :class="{selected : sortIndex === 5}">
-                            <small>{{player.challenged}}</small>
-                        </td>
-                        <td :class="{selected : sortIndex === 6}">
-                            <small>{{player.defended}}</small>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="row justify-content-center">
+        <div class="col col-auto">
+            <h5 id="list-title" class="pointer" @click="toggleStats">
+                Player Statistics
+                <i class="pointer fa" :class="[visibleStats ? 'fa-angle-up' : 'fa-angle-down']"></i>
+            </h5>
+            <table v-if="visibleStats" class="table table-borderless table-sm table-responsive">
+                <thead>
+                <tr>
+                    <th scope="col">
+                        #
+                    </th>
+                    <th scope="col">
+                        Player
+                    </th>
+                    <th scope="col" class="pointer" @click="sortByRating"
+                        :class="{selected : sortIndex === 0}">
+                        Rating
+                    </th>
+                    <th scope="col" class="pointer" @click="sortByMatchesSuccess"
+                        :class="{selected : sortIndex === 1}">
+                        Matches
+                    </th>
+                    <th scope="col" class="pointer" @click="sortByChallengeSuccess"
+                        :class="{selected : sortIndex === 2}">
+                        Challenges
+                    </th>
+                    <th scope="col" class="pointer" @click="sortByDefenceSuccess"
+                        :class="{selected : sortIndex === 3}">
+                        Defences
+                    </th>
+                    <th scope="col" class="pointer" @click="sortByMatches"
+                        :class="{selected : sortIndex === 4}">
+                        M
+                    </th>
+                    <th scope="col" class="pointer" @click="sortByChallenges"
+                        :class="{selected : sortIndex === 5}">
+                        C
+                    </th>
+                    <th scope="col" class="pointer" @click="sortByDefences"
+                        :class="{selected : sortIndex === 6}">
+                        D
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(player, index) in sortedPlayers">
+                    <td><small>{{index + 1}}</small></td>
+                    <td>{{player.name}}</td>
+                    <td :class="{selected : sortIndex === 0}"><small>{{rating(player)}}</small></td>
+                    <td :class="{selected : sortIndex === 1}">
+                        <small>{{matchesSuccess(player)}}</small>
+                    </td>
+                    <td :class="{selected : sortIndex === 2}">
+                        <small>{{challengesSuccess(player)}}</small>
+                    </td>
+                    <td :class="{selected : sortIndex === 3}">
+                        <small>{{defencesSuccess(player)}}</small>
+                    </td>
+                    <td :class="{selected : sortIndex === 4}">
+                        <small>{{player.total_matches}}</small>
+                    </td>
+                    <td :class="{selected : sortIndex === 5}">
+                        <small>{{player.challenged}}</small>
+                    </td>
+                    <td :class="{selected : sortIndex === 6}">
+                        <small>{{player.defended}}</small>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
