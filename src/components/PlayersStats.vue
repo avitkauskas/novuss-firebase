@@ -174,7 +174,7 @@
                     return VOID;
                 } else {
                     return player.total_success_rate.toFixed(0) + '%' +
-                        ' ( ' + player.total_successfully + '/' + player.total_matches + ' )';
+                        ' (' + player.total_successfully + '/' + player.total_matches + ')';
                 }
             },
 
@@ -183,7 +183,7 @@
                     return VOID;
                 } else {
                     return player.challenge_success_rate.toFixed(0) + '%' +
-                        ' ( ' + player.challenged_successfully + '/' + player.challenged + ' )';
+                        ' (' + player.challenged_successfully + '/' + player.challenged + ')';
                 }
             },
 
@@ -192,7 +192,7 @@
                     return VOID;
                 } else {
                     return player.defend_success_rate.toFixed(0) + '%' +
-                        ' ( ' + player.defended_successfully + '/' + player.defended + ' )';
+                        ' (' + player.defended_successfully + '/' + player.defended + ')';
                 }
             }
         },
